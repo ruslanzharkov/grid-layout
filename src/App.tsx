@@ -8,10 +8,6 @@ import { getPositionOfNewElement } from 'shared/lib/grid/getPositionOfNewElement
 import { StyledAppContainer, StyledInputsContainer } from './App.styled';
 import { GridItem, SizeProperties } from 'types/grid';
 
-// 1 1 0 0 0
-// 1 1 0 0 0
-// 0 0 0 0 0
-
 function App() {
   const [gridSize, setGridSize] = useState<SizeProperties>({
     width: 16,
