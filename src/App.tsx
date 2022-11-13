@@ -3,44 +3,37 @@ import { ChangeEvent, useState } from 'react';
 import { GridLayout } from 'widgets/GridLayout';
 
 import { GlobalStyles } from 'shared/styles';
-import { getPositionOfNewElement } from 'shared/lib/grid/getPositionOfNewElement';
+import {
+  constructEmptyMatrix,
+  getPositionOfNewElement,
+} from 'shared/lib/matrix';
+
+import { GridElement, SizeProperties } from 'types/grid';
+
+import { Input } from 'shared/ui/Input';
+import { Button } from 'shared/ui/Button';
+import { CELL_SIZE } from 'shared/constants/grid';
 
 import { StyledAppContainer, StyledInputsContainer } from './App.styled';
-import { GridItem, SizeProperties } from 'types/grid';
 
 function App() {
   const [gridSize, setGridSize] = useState<SizeProperties>({
     width: 16,
     height: 8,
   });
-  const [matrix, setMatrix] = useState<number[][]>(() => {
-    const initialMatrix = [] as number[][];
-
-    for (let i = 0; i < gridSize.height; i++) {
-      initialMatrix[i] = [];
-      for (let j = 0; j < gridSize.width; j++) {
-        initialMatrix[i].push(0);
-      }
-    }
-
-    return initialMatrix;
-  });
-
-  const [cellSize, setCellSize] = useState(50);
+  const [matrix, setMatrix] = useState<number[][]>(() =>
+    constructEmptyMatrix(gridSize.width, gridSize.height)
+  );
+  const [gridItems, setGridItems] = useState<GridElement[]>([]);
   const [newElement, setNewElement] = useState<SizeProperties>({
     width: 0,
     height: 0,
   });
 
-  const [gridItems, setGridItems] = useState<GridItem[]>([]);
-
   const handleNewElementPositionChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
-    let value = parseInt(event.target.value);
-    if (isNaN(value)) {
-      value = 0;
-    }
+    const value = parseInt(event.target.value.replace(/\D/gi, '') || '0');
 
     setNewElement((prevState) => ({
       ...prevState,
@@ -48,23 +41,21 @@ function App() {
     }));
   };
 
-  const handleGridCellSizeChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCellSize(parseInt(event.target.value));
-  };
-
   const handleAddElementClick = () => {
-    const copiedMatrix = Object.assign([], matrix);
-    const { position, updatedMatrix } = getPositionOfNewElement(
-      gridSize,
-      gridItems,
-      newElement,
-      copiedMatrix
-    );
+    if (newElement.width <= gridSize.width) {
+      const copiedMatrix = Object.assign([], matrix);
+      const { position, updatedMatrix, updatedHeight } =
+        getPositionOfNewElement(gridSize, copiedMatrix, newElement);
 
-    setMatrix(updatedMatrix);
-    setGridItems((prevState) =>
-      prevState.concat([{ ...position, ...newElement }])
-    );
+      setGridSize((prevState) => ({
+        ...prevState,
+        height: updatedHeight,
+      }));
+      setMatrix(updatedMatrix);
+      setGridItems((prevState) =>
+        prevState.concat([{ ...position, ...newElement }])
+      );
+    }
   };
 
   return (
@@ -72,42 +63,32 @@ function App() {
       <GlobalStyles />
       <StyledAppContainer>
         <StyledInputsContainer>
-          <div>
-            <h5>Size of the grid</h5>
-            <div>
-              px per cell:{' '}
-              <input
-                type="number"
-                value={cellSize}
-                onChange={handleGridCellSizeChange}
-              />
-            </div>
-          </div>
+          <Input
+            id="width"
+            name="width"
+            label="Width of the element"
+            value={newElement.width}
+            type="text"
+            onChange={handleNewElementPositionChange}
+          />
+          <Input
+            id="height"
+            name="height"
+            label="Height of the element"
+            value={newElement.height}
+            type="text"
+            onChange={handleNewElementPositionChange}
+          />
 
-          <div>
-            <h5>Element to be added</h5>
-            <div>
-              width of the element:{' '}
-              <input
-                name="width"
-                type="text"
-                value={newElement.width}
-                onChange={handleNewElementPositionChange}
-              />
-            </div>
-            <div>
-              height of the element:{' '}
-              <input
-                name="height"
-                type="text"
-                value={newElement.height}
-                onChange={handleNewElementPositionChange}
-              />
-            </div>
-            <button onClick={handleAddElementClick}>Add element</button>
-          </div>
+          <Button
+            disabled={!newElement.width || !newElement.height}
+            id="add-element"
+            onClick={handleAddElementClick}
+          >
+            Add element
+          </Button>
         </StyledInputsContainer>
-        <GridLayout size={cellSize} grid={gridSize} items={gridItems} />
+        <GridLayout size={CELL_SIZE} grid={gridSize} items={gridItems} />
       </StyledAppContainer>
     </>
   );

@@ -9,4 +9,6 @@ export const StyledAppContainer = styled.div`
 
 export const StyledInputsContainer = styled.div`
   margin: 20px 0;
+  display: grid;
+  grid-gap: 20px;
 `;

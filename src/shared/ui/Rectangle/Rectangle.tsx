@@ -1,7 +1,13 @@
 import { FC, useMemo } from 'react';
+
+import { RectangleStyledProps } from 'types/rectangle';
 import { generateColor } from 'shared/lib/color/generateColor';
+
 import { StyledRectangle } from './Rectangle.styled';
-import { RectangleProps } from 'types/rectangle';
+
+interface RectangleProps extends RectangleStyledProps {
+  dataTestId?: string;
+}
 
 export const Rectangle: FC<RectangleProps> = ({
   position,
@@ -9,11 +15,13 @@ export const Rectangle: FC<RectangleProps> = ({
   height,
   verticalShiftPx,
   horizontalShiftPx,
+  dataTestId,
 }) => {
   const backgroundColor = useMemo(() => generateColor(), []);
 
   return (
     <StyledRectangle
+      data-testid={dataTestId}
       position={position}
       backgroundColor={backgroundColor}
       width={width}

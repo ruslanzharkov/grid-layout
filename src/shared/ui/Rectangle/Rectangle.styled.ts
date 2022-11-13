@@ -1,12 +1,14 @@
 import styled from 'styled-components';
-import { RectangleProps } from 'types/rectangle';
+import { RectangleStyledProps } from 'types/rectangle';
 
-interface StyledRectangleProps extends RectangleProps {
+interface StyledRectangleProps extends RectangleStyledProps {
   backgroundColor: string;
 }
 
 export const StyledRectangle = styled.div<StyledRectangleProps>`
   position: ${({ position }) => position};
+  // fallback background color in case generated incorrect color
+  background-color: chartreuse;
   background-color: ${({ backgroundColor }) => backgroundColor};
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;

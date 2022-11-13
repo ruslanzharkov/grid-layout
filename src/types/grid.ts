@@ -1,4 +1,4 @@
-export interface Position {
+export interface Coordinates {
   x: number;
   y: number;
 }
@@ -8,4 +8,4 @@ export interface SizeProperties {
   height: number;
 }
 
-export interface GridItem extends Position, SizeProperties {}
+export interface GridElement extends Coordinates, SizeProperties {}
