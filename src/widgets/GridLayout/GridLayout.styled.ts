@@ -10,7 +10,7 @@ export const StyledGridCell = styled.div<Coordinates & SizeProperties>`
   outline: 1px solid #dcd9d9;
   position: absolute;
   transform: ${({ x, y }) => {
-    if (x > 0 && y > 0) {
+    if (x >= 0 && y >= 0) {
       return css`
         translate(${x}px, ${y}px);
       `;
