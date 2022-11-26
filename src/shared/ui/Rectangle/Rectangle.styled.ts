@@ -17,5 +17,5 @@ export const StyledRectangle = styled.div<StyledRectangleProps>`
     ${({ horizontalShiftPx }) => horizontalShiftPx}px,
     ${({ verticalShiftPx }) => verticalShiftPx}px
   );
-  outline: 1px solid #b3b0b0;
+  box-shadow: inset 0 0 0 0.5px #b3b0b0;
 `;

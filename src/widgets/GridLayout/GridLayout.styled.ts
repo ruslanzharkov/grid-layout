@@ -7,7 +7,7 @@ const commonStyles = css<SizeProperties>`
 `;
 
 export const StyledGridCell = styled.div<Coordinates & SizeProperties>`
-  outline: 1px solid #dcd9d9;
+  box-shadow: inset 0 0 0 0.5px #b3b0b0;
   position: absolute;
   transform: ${({ x, y }) => {
     if (x >= 0 && y >= 0) {
@@ -26,4 +26,5 @@ export const StyledGridContainer = styled.div<SizeProperties>`
   position: relative;
   box-shadow: 0 1px 7px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  box-sizing: border-box;
 `;
